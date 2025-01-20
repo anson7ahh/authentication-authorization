@@ -1,5 +1,5 @@
 ####  signup user
-POST http://localhost:3000/signup
+POST http://localhost:3080/signup
 Content-Type: application/json
 
 {
@@ -8,16 +8,12 @@ Content-Type: application/json
     "password":"323"
 }
 
-
-
-
-
 ########
-POST http://localhost:3000/signin
+POST http://localhost:3080/signin
 Content-Type: application/json
 
 {
-      "name":"s113323221",
+    "name":"s113323221",
     "email":"33233",
     "password":"323"
     

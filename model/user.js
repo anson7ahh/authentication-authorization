@@ -1,35 +1,34 @@
-const { mongoose, model } = require("mongoose")
-const Schema = mongoose.Schema
-const { ROLE } = require("./role.js");
+const { mongoose, model } = require("mongoose");
+const Schema = mongoose.Schema;
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/test')
-    .then(() => console.log('Connected!'));
+mongoose
+  .connect(process.env.MONGODB_URL.concat("", "/beautice"))
+  .then(() => console.log("Connected!"));
 const UserSchema = new Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-        },
-
-        email: {
-            type: String,
-            required: true,
-        },
-        role: {
-            type: String,
-            default: "user",
-            enum: [ROLE.user, ROLE.admin, ROLE.manager],
-        },
-
-        password: {
-            type: String,
-            required: true,
-        },
+  {
+    fullName: {
+      type: String,
+      required: true,
     },
-    { timestamps: true }
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
 );
 
-
 const user = model("users", UserSchema);
-module.exports = user
+module.exports = user;
