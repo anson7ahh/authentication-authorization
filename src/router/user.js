@@ -6,7 +6,7 @@ const {
   editUser,
   editPassword,
 } = require("../controller/user.js");
-const validateRegister = require("../middlleware/validateRegister.js");
+const validateRegister = require("../middleware/validateRegister.js");
 
 router.post("/signup", validateRegister, register);
 router.post("/signin", loginUser);

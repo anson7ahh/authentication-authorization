@@ -1,9 +1,0 @@
-###auth
-
-GET http://localhost:3000/search
-Content-Type: application/json
-
-
-{
-"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7fSwiaWF0IjoxNjk1MTQ1NDg1LCJleHAiOjE3MjY2ODE0ODV9.MqkR2Ic6zLBiqhrs6-yRY4xUr6rRl2wxlwp_Mowl1Lo"
-}
