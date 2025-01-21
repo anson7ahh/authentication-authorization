@@ -1,1 +1,1 @@
-const app = require("../index.js");
+const app = require("../src/index.js");
