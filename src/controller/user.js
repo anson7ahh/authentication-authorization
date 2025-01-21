@@ -34,43 +34,47 @@ const register = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    const { password, email } = req.body;
-    const account = await user.findOne({ email: email });
-    if (!account) {
-      return res.status(404).json({
-        message: "No such account found",
-      });
-    }
-    const comparePassword = await bcrypt.compare(password, account.password);
-    if (!comparePassword) {
-      return res.json(
-        {
-          message: "Password is incorrect",
-        },
-        401
-      );
-    }
+    // console.log("=========================1");
 
-    const payload = {
-      id: account.id,
-    };
-    const accessToken = await jwt.sign(
-      {
-        payload,
-      },
-      process.env.PRIVATE_KEY,
-      { expiresIn: process.env.JWT_TIME }
-    );
-    if (!accessToken) {
-      throw new Error();
-    }
+    // const { password, email } = req.body;
+    // const account = await user.findOne({ email: email });
+    // console.log("=========================2");
+    // if (!account) {
+    //   return res.status(404).json({
+    //     message: "No such account found",
+    //   });
+    // }
+    // const comparePassword = await bcrypt.compare(password, account.password);
+    // console.log("=========================3");
+    // if (!comparePassword) {
+    //   return res.json(
+    //     {
+    //       message: "Password is incorrect",
+    //     },
+    //     401
+    //   );
+    // }
+
+    // const payload = {
+    //   id: account.id,
+    // };
+    // const accessToken = await jwt.sign(
+    //   {
+    //     payload,
+    //   },
+    //   process.env.PRIVATE_KEY,
+    //   { expiresIn: process.env.JWT_TIME }
+    // );
+    // if (!accessToken) {
+    //   throw new Error();
+    // }
 
     return res.status(200).json({
       message: "success",
-      token: accessToken,
-      fullName: account.fullName,
-      email: account.email,
-      phoneNumber: account.phoneNumber,
+      // token: accessToken,
+      // fullName: account.fullName,
+      // email: account.email,
+      // phoneNumber: account.phoneNumber,
     });
   } catch (err) {
     next(err);
