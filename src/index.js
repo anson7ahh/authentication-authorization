@@ -1,16 +1,18 @@
 const express = require("express");
-const app = express();
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const router = require("./router/user.js");
 const cors = require("cors");
-const serverless = require("serverless-http");
+const serverless = require("serverless-http"); // Add this line for serverless support
+
+const app = express();
 const PORT = process.env.PORT || 3001;
+
 app.use(cors());
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 app.use("/", router);
+
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 app.use((err, req, res, next) => {
@@ -19,7 +21,6 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-// app.listen(PORT, () => {
-//   console.log(`Example app listening at http://localhost:${PORT}`);
-// });
-module.exports.handler = serverless(app);
+
+// Use serverless-http to wrap the app for serverless environments
+module.exports.handler = serverless(app); // Export the handler instead of the app itself
