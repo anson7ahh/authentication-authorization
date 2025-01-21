@@ -22,5 +22,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Use serverless-http to wrap the app for serverless environments
-module.exports.handler = serverless(app); // Export the handler instead of the app itself
+module.exports.handler = serverless(app);
