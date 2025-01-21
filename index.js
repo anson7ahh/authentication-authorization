@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
-const port = 3080;
+const port = process.env.PORT || 3080;
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const router = require("./router/user.js");
-require("./config/passport")(app);
+require("./config/passport.js")(app);
 
 const cors = require("cors");
 const passport = require("passport");
@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/", router);
-
+app.get("/", (req, res) => res.send("Express on Vercel"));
 app.use((req, res, next) => {
   next(createError.NotFound("ko tim thay router"));
 });
@@ -27,3 +27,4 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+module.exports = app;

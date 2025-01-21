@@ -1,7 +1,7 @@
 const user = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const { ObjectId } = require("mongodb");
 const register = async (req, res, next) => {
   try {
     const { fullName, password, email, phoneNumber } = req.body;
@@ -53,8 +53,9 @@ const loginUser = async (req, res, next) => {
         401
       );
     }
+
     const payload = {
-      id: user.id,
+      id: account.id,
     };
     const accessToken = await jwt.sign(
       {
@@ -80,73 +81,96 @@ const loginUser = async (req, res, next) => {
 };
 const editUser = async (req, res, next) => {
   try {
-    const id = await jwt.verify(req.headers.token);
-    const { fullName, email, phoneNumber } = req.body.data;
-    const account = await user.findOne({ id: id });
-    if (!account) {
-      return res.json(
-        {
-          message: "unAuthorization",
-        },
-        403
-      );
+    const authHeader = req.headers.authorization;
+    const { fullName, email, phoneNumber } = req.body;
+    if (!authHeader) {
+      return res.json({ message: "Token is missing" }, 400);
     }
-    await userToUpdate.update({
-      fullName: account.fullName,
-      email: account.email,
-      phoneNumber: account.phoneNumber,
+
+    const token = authHeader.split(" ")[1];
+    console.log("token ", token);
+    if (!token) {
+      return res.status(400).json({ message: "Invalid token format" });
+    }
+
+    const userId = await jwt.verify(token, process.env.privateKey);
+    console.log("Verified User ID:", userId.payload.id);
+    const account = await user.findOne({
+      _id: new ObjectId(userId.payload.id),
+    });
+
+    // console.log("account", account);
+    // if (!account) {
+    //   return res.status(401).json({ message: "Unauthorized: User not found" });
+    // }
+    const updatedUser = await user.findOneAndUpdate(
+      account, // Điều kiện tìm kiếm
+      { $set: { fullName, email, phoneNumber } }, // Cập nhật thông tin
+      { new: true } // Trả về tài liệu đã được cập nhật
+    );
+    return res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser,
     });
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
 const editPassword = async (req, res, next) => {
   try {
-    const authHeader = req.headers.Authorization;
+    const authHeader = req.headers.authorization;
+
     if (!authHeader) {
       return res.json({ message: "Token is missing" }, 400);
     }
-    console.log("Authorization header:", AuthHeader);
 
     const token = authHeader.split(" ")[1];
+    console.log("token ", token);
     if (!token) {
       return res.status(400).json({ message: "Invalid token format" });
     }
     console.log("Token extracted:", token);
 
-    const id = await jwt.verify(token, process.env.privateKey);
-    console.log("Verified User ID:", id);
+    const userId = await jwt.verify(token, process.env.privateKey);
+    console.log("Verified User ID:", userId.payload.id);
 
-    const { currentPassword, confirmPassword, newPassword } = req.body.data;
+    const { currentPassword, confirmPassword, newPassword } = req.body;
     console.log("Request Body Data:", {
       currentPassword,
       confirmPassword,
       newPassword,
     });
-    const account = await user.findOne({ id: id });
+
+    const account = await user.findOne({
+      _id: new ObjectId(userId.payload.id),
+    });
+
+    console.log("account", account);
     if (!account) {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
-    console.log("Account found:", account);
-    if (currentPassword !== account.password) {
+
+    const comparePassword = await bcrypt.compare(
+      currentPassword,
+      account.password
+    );
+    console.log("currentPassword", currentPassword);
+    console.log("comparePassword", comparePassword);
+    if (!comparePassword) {
       return res.status(403).json({
-        message: "Forbidden: Current password is incorrect",
+        message: "Current password is incorrect",
       });
     }
-
-    account.password = newPassword;
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    account.password = hashedNewPassword;
     await account.save();
-    console.log("Password updated successfully for user:", id);
 
-    // Bước 9: Phản hồi thành công
     return res.status(200).json({
       message: "Password updated successfully",
     });
   } catch (error) {
-    // In lỗi chi tiết
     console.error("Error in editPassword:", error.message, error.stack);
 
-    // Trả về lỗi nội bộ
     return res.status(500).json({
       message: "Internal Server Error: Unable to process the request",
     });
