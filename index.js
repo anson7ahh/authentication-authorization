@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 3080;
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const router = require("./router/user.js");
 require("./config/passport.js")(app);
-
 const cors = require("cors");
 const passport = require("passport");
+
+const PORT = process.env.PORT || 3080;
 app.use(cors());
 app.use(express.json());
 
