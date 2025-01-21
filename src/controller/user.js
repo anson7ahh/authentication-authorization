@@ -34,18 +34,14 @@ const register = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
-    console.log("=========================1");
-
     const { password, email } = req.body;
     const account = await user.findOne({ email: email });
-    console.log("=========================2");
     if (!account) {
       return res.status(404).json({
         message: "No such account found",
       });
     }
     const comparePassword = await bcrypt.compare(password, account.password);
-    console.log("=========================3");
     if (!comparePassword) {
       return res.status(401).json({
         message: "Password is incorrect",
