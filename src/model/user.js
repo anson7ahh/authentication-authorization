@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 mongoose
   .connect(`${process.env.MONGODB_URL}`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
   })
   .then(() => console.log("Connected!"));
 const UserSchema = new Schema(
