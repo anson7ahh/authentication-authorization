@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const router = require("./router/user.js");
 const cors = require("cors");
-const serverless = require("serverless-http"); // Add this line for serverless support
+// const serverless = require("serverless-http"); // Add this line for serverless support
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,5 +21,7 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-
-module.exports.handler = serverless(app);
+app.listen(PORT, () => {
+  console.log(`Example app listening on port http://localhost:${PORT}`);
+});
+module.exports = app;
