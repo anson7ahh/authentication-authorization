@@ -7,7 +7,7 @@ require("./config/passport.js")(app);
 const cors = require("cors");
 const passport = require("passport");
 
-const PORT = process.env.PORT || 3080;
+const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
