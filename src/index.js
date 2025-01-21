@@ -19,7 +19,7 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Example app listening at http://localhost:${PORT}`);
+// });
 module.exports.handler = serverless(app);
