@@ -2,9 +2,7 @@ const { mongoose, model } = require("mongoose");
 const Schema = mongoose.Schema;
 
 mongoose
-  .connect(`${process.env.MONGODB_URL}`, {
-    useNewUrlParser: true,
-  })
+  .connect(`${process.env.MONGODB_URL}`)
   .then(() => console.log("Connected!"));
 const UserSchema = new Schema(
   {
