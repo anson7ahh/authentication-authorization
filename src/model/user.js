@@ -2,7 +2,7 @@ const { mongoose, model } = require("mongoose");
 const Schema = mongoose.Schema;
 
 mongoose
-  .connect(`${process.env.MONGODB_URL}${process.env.MONGO_DATA}`, {
+  .connect(`${process.env.MONGODB_URL}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

@@ -58,7 +58,7 @@ const loginUser = async (req, res, next) => {
       {
         payload,
       },
-      process.env.privateKey,
+      process.env.PRIVATE_KEY,
       { expiresIn: process.env.JWT_TIME }
     );
     if (!accessToken) {
@@ -90,7 +90,7 @@ const editUser = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid token format" });
     }
 
-    const userId = await jwt.verify(token, process.env.privateKey);
+    const userId = await jwt.verify(token, process.env.PRIVATE_KEY);
     console.log("Verified User ID:", userId.payload.id);
     const account = await user.findOne({
       _id: new ObjectId(userId.payload.id),
@@ -128,7 +128,7 @@ const editPassword = async (req, res, next) => {
     }
     console.log("Token extracted:", token);
 
-    const userId = await jwt.verify(token, process.env.privateKey);
+    const userId = await jwt.verify(token, process.env.PRIVATE_KEY);
     console.log("Verified User ID:", userId.payload.id);
 
     const { currentPassword, confirmPassword, newPassword } = req.body;
