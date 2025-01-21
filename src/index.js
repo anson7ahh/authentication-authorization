@@ -6,7 +6,7 @@ const router = require("./router/user.js");
 require("./config/passport.js")(app);
 const cors = require("cors");
 const passport = require("passport");
-
+const serverless = require("serverless-http");
 const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
@@ -27,4 +27,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
-module.exports = app;
+module.exports.handler = serverless(app);
