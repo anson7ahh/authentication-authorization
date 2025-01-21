@@ -12,9 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", router);
 app.get("/", (req, res) => res.send("Express on Vercel"));
-app.use((req, res, next) => {
-  next(createError.NotFound("ko tim thay router"));
-});
 
 app.use((err, req, res, next) => {
   res.json({

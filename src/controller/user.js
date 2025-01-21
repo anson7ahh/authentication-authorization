@@ -84,9 +84,7 @@ const editUser = async (req, res, next) => {
     if (!authHeader) {
       return res.status(400).json({ message: "Token is missing" });
     }
-
     const token = authHeader.split(" ")[1];
-    console.log("token ", token);
     if (!token) {
       return res.status(400).json({ message: "Invalid token format" });
     }
@@ -96,7 +94,6 @@ const editUser = async (req, res, next) => {
     const account = await user.findOne({
       _id: new ObjectId(userId.payload.id),
     });
-
     const updatedUser = await user.findOneAndUpdate(
       account,
       { $set: { fullName, email, phoneNumber } },
@@ -113,35 +110,29 @@ const editUser = async (req, res, next) => {
 const editPassword = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-
     if (!authHeader) {
       return res.status(400).json({ message: "Token is missing" });
     }
-
     const token = authHeader.split(" ")[1];
     console.log("token ", token);
     if (!token) {
       return res.status(400).json({ message: "Invalid token format" });
     }
     console.log("Token extracted:", token);
-
     const userId = await jwt.verify(token, process.env.PRIVATE_KEY);
     console.log("Verified User ID:", userId.payload.id);
-
     const { currentPassword, confirmPassword, newPassword } = req.body;
     console.log("Request Body Data:", {
       currentPassword,
       confirmPassword,
       newPassword,
     });
-
     const account = await user.findOne({
       _id: new ObjectId(userId.payload.id),
     });
     if (!account) {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
-
     const comparePassword = await bcrypt.compare(
       currentPassword,
       account.password
