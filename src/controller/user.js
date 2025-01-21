@@ -47,12 +47,9 @@ const loginUser = async (req, res, next) => {
     const comparePassword = await bcrypt.compare(password, account.password);
     console.log("=========================3");
     if (!comparePassword) {
-      return res.json(
-        {
-          message: "Password is incorrect",
-        },
-        401
-      );
+      return res.status(401).json({
+        message: "Password is incorrect",
+      });
     }
 
     const payload = {
@@ -85,7 +82,7 @@ const editUser = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     const { fullName, email, phoneNumber } = req.body;
     if (!authHeader) {
-      return res.json({ message: "Token is missing" }, 400);
+      return res.status(400).json({ message: "Token is missing" });
     }
 
     const token = authHeader.split(" ")[1];
@@ -100,14 +97,10 @@ const editUser = async (req, res, next) => {
       _id: new ObjectId(userId.payload.id),
     });
 
-    // console.log("account", account);
-    // if (!account) {
-    //   return res.status(401).json({ message: "Unauthorized: User not found" });
-    // }
     const updatedUser = await user.findOneAndUpdate(
-      account, // Điều kiện tìm kiếm
-      { $set: { fullName, email, phoneNumber } }, // Cập nhật thông tin
-      { new: true } // Trả về tài liệu đã được cập nhật
+      account,
+      { $set: { fullName, email, phoneNumber } },
+      { new: true }
     );
     return res.status(200).json({
       message: "User updated successfully",
@@ -122,7 +115,7 @@ const editPassword = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      return res.json({ message: "Token is missing" }, 400);
+      return res.status(400).json({ message: "Token is missing" });
     }
 
     const token = authHeader.split(" ")[1];
@@ -145,8 +138,6 @@ const editPassword = async (req, res, next) => {
     const account = await user.findOne({
       _id: new ObjectId(userId.payload.id),
     });
-
-    console.log("account", account);
     if (!account) {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
@@ -155,8 +146,6 @@ const editPassword = async (req, res, next) => {
       currentPassword,
       account.password
     );
-    console.log("currentPassword", currentPassword);
-    console.log("comparePassword", comparePassword);
     if (!comparePassword) {
       return res.status(403).json({
         message: "Current password is incorrect",
